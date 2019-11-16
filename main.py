@@ -2,6 +2,9 @@ import pickle
 import pandas as pd
 import csv
 
+import utils
+
+
 with open('vocabulary.pkl', 'rb') as vocabularyFile:
     vocabulary = pickle.load(vocabularyFile)
 
@@ -22,7 +25,7 @@ if searchEngine == 1:
     search = input("query: ") #taken search elements from user
 
     listOfsearchElements = search.split()
-    listOfsearchElements = list(dict.fromkeys(listOfsearchElements))  # removing repeating elements in a list
+    listOfsearchElements = list(set(listOfsearchElements))  # removing repeating elements in a list
 
     keyList = []
     resultlist = []
@@ -56,12 +59,12 @@ if searchEngine == 1:
 
                 title = row[0]
                 intro = row[1]
-                url = row[4]
+                url = row[3]
 
                 listOfTitle.append(title)
                 listOfIntro.append(intro)
                 listOfUrl.append(url)
-                movies_df = pd.DataFrame({'Title': listOfTitle, 'Intro': intro, 'Url': url})
+        movies_df = pd.DataFrame({'Title': listOfTitle, 'Intro': listOfIntro, 'Url': listOfUrl})
         print(movies_df)
 
     else:
@@ -81,14 +84,12 @@ elif searchEngine == 2:
     listOfIntro = []
     listOfUrl = []
 
+
     for i in range(len(listOfsearchElements)):
         for (key, value) in vocabulary.items():
             if value == listOfsearchElements[i]:  # check the search elements are in vocabulary dictionary , or not ?
                 keyList.append(key)  # if they are exist in vocabulary dictionary , up them on keyList
 
-    if (len(keyList) != len(
-            listOfsearchElements)):  # Being "len of key isnt equal to len of search list" mean is we cant research for all search element, so just quit to search
-        print("Opps! Sorry we can't find any film")
 
     if (len(keyList) == len(listOfsearchElements)):
 
@@ -97,23 +98,45 @@ elif searchEngine == 2:
                 if key == keyList[j]:
                     resultlist.append(value)
 
-    # compare for common articles
-    result = set(resultlist[0])
-    for s in resultlist[1:]:
-        result.intersection_update(s)
+        # compare for common articles
+        result = set(resultlist[0])
+        for s in resultlist[1:]:
+            result.intersection_update(s)
 
-    result = list(result)
-    for i in range(len(result)):
-        with open('MoviesTSV\\article_' + str(i) + '.tsv', encoding='utf8') as tsvfile:
-            reader = csv.reader(tsvfile, delimiter='\t')
-            row = next(reader)
+        result = list(result)
+        for i in range(len(result)):
+            with open('MoviesTSV\\article_' + str(i) + '.tsv', encoding='utf8') as tsvfile:
+                reader = csv.reader(tsvfile, delimiter='\t')
+                row = next(reader)
 
-            title = row[0]
-            intro = row[1]
-            url = row[4]
+                title = row[0]
+                intro = row[1]
+                url = row[3]
 
-            listOfTitle.append(title)
-            listOfIntro.append(intro)
-            listOfUrl.append(url)
-            movies_df = pd.DataFrame({'Title': listOfTitle, 'Intro': intro, 'Url': url})
-    print(movies_df)
+                listOfTitle.append(title)
+                listOfIntro.append(intro)
+                listOfUrl.append(url)
+
+
+        queryTfIdf  = []
+        for word in listOfsearchElements:
+            for termId, term in vocabulary.items():  # for name, age in dictionary.iteritems():  (for Python 2.x)
+                if term == word:
+                    wordId = termId
+                    break
+
+            utils.computeTfIdf(wordId, listOfsearchElements, vocabulary, indexDictionary, 10)
+
+            queryTfIdf.append(tfIdf)
+
+
+        listOfSimilarity = []
+
+        for
+        utils.CountCosineSimilarity(queryTfIdf, articleTfIdf)
+
+        movies_df = pd.DataFrame({'Title': listOfTitle, 'Intro': listOfIntro, 'Url': listOfUrl, 'similarity': listOfSimilarity})
+        print(movies_df)
+
+    else:
+        print("Opps! Sorry we can't find any film")
