@@ -8,56 +8,112 @@ with open('vocabulary.pkl', 'rb') as vocabularyFile:
 with open('indexDictionary.pkl', 'rb') as indexFile:
     indexDictionary = pickle.load(indexFile)
 
+print(indexDictionary)
+print(vocabulary)
 
-# ----------------------------------------> question 2.1.2 <----------------------------------------------
-search = input() #taken search elements from user
+print(type(indexDictionary))
+print(type(vocabulary))
 
-listOfsearchElements = search.split()
-listOfsearchElements = list(dict.fromkeys(listOfsearchElements))  # removing repeating elements in a list
+searchEngine = int(input("select your search engine, only 1 avalible: "))
 
-keyList = []
-resultlist = []
+if searchEngine == 1:
 
-listOfTitle = []
-listOfIntro = []
-listOfUrl = []
+    # ----------------------------------------> question 2.1.2 <----------------------------------------------
+    search = input("query: ") #taken search elements from user
 
-for i in range(len(listOfsearchElements)):
-    for (key, value) in vocabulary.items():
-        if value == listOfsearchElements[i]:  # check the search elements are in vocabulary dictionary , or not ?
-            keyList.append(key)  # if they are exist in vocabulary dictionary , up them on keyList
+    listOfsearchElements = search.split()
+    listOfsearchElements = list(dict.fromkeys(listOfsearchElements))  # removing repeating elements in a list
 
-if (len(keyList) != len(
-        listOfsearchElements)):  # Being "len of key isnt equal to len of search list" mean is we cant research for all search element, so just quit to search
-    print("Opps! Sorry we can't find any film")
+    keyList = []
+    resultlist = []
 
-if (len(keyList) == len(listOfsearchElements)):
+    listOfTitle = []
+    listOfIntro = []
+    listOfUrl = []
 
-    for j in range(len(keyList)):
-        for (key, value) in indexDictionary.items():
-            if key == keyList[j]:
-                resultlist.append(value)
+    for i in range(len(listOfsearchElements)):
+        for (key, value) in vocabulary.items():
+            if value == listOfsearchElements[i]:  # check the search elements are in vocabulary dictionary , or not ?
+                keyList.append(key)  # if they are exist in vocabulary dictionary , up them on keyList
 
-# compare for common articles
-result = set(resultlist[0])
-for s in resultlist[1:]:
-    result.intersection_update(s)
+    if (len(keyList) == len(listOfsearchElements)):
 
-result = list(result)
-for i in range(len(result)):
-    with open('MoviesTSV\\article_' + str(i) + '.tsv', encoding='utf8') as tsvfile:
-        reader = csv.reader(tsvfile, delimiter='\t')
-        row = next(reader)
+        for j in range(len(keyList)):
+            for (key, value) in indexDictionary.items():
+                if key == keyList[j]:
+                    resultlist.append(value)
 
-        title = row[0]
-        intro = row[1]
-        url = row[4]
+        # compare for common articles
+        result = set(resultlist[0])
+        for s in resultlist[1:]:
+            result.intersection_update(s)
 
-        listOfTitle.append(title)
-        listOfIntro.append(intro)
-        listOfUrl.append(url)
-        movies_df = pd.DataFrame({'Title': listOfTitle, 'Intro': intro, 'Url': url})
-print(movies_df)
+        result = list(result)
+        for i in range(len(result)):
+            with open('MoviesTSV\\article_' + str(i) + '.tsv', encoding='utf8') as tsvfile:
+                reader = csv.reader(tsvfile, delimiter='\t')
+                row = next(reader)
 
+                title = row[0]
+                intro = row[1]
+                url = row[4]
 
-# ----------------------------------------> question 2.2.2 <----------------------------------------------
+                listOfTitle.append(title)
+                listOfIntro.append(intro)
+                listOfUrl.append(url)
+                movies_df = pd.DataFrame({'Title': listOfTitle, 'Intro': intro, 'Url': url})
+        print(movies_df)
+
+    else:
+        print("Opps! Sorry we can't find any film")
+
+elif searchEngine == 2:
+    # ----------------------------------------> question 2.2.2 <----------------------------------------------
+    search = input() #taken search elements from user
+
+    listOfsearchElements = search.split()
+    listOfsearchElements = list(dict.fromkeys(listOfsearchElements))  # removing repeating elements in a list
+
+    keyList = []
+    resultlist = []
+
+    listOfTitle = []
+    listOfIntro = []
+    listOfUrl = []
+
+    for i in range(len(listOfsearchElements)):
+        for (key, value) in vocabulary.items():
+            if value == listOfsearchElements[i]:  # check the search elements are in vocabulary dictionary , or not ?
+                keyList.append(key)  # if they are exist in vocabulary dictionary , up them on keyList
+
+    if (len(keyList) != len(
+            listOfsearchElements)):  # Being "len of key isnt equal to len of search list" mean is we cant research for all search element, so just quit to search
+        print("Opps! Sorry we can't find any film")
+
+    if (len(keyList) == len(listOfsearchElements)):
+
+        for j in range(len(keyList)):
+            for (key, value) in indexDictionary.items():
+                if key == keyList[j]:
+                    resultlist.append(value)
+
+    # compare for common articles
+    result = set(resultlist[0])
+    for s in resultlist[1:]:
+        result.intersection_update(s)
+
+    result = list(result)
+    for i in range(len(result)):
+        with open('MoviesTSV\\article_' + str(i) + '.tsv', encoding='utf8') as tsvfile:
+            reader = csv.reader(tsvfile, delimiter='\t')
+            row = next(reader)
+
+            title = row[0]
+            intro = row[1]
+            url = row[4]
+
+            listOfTitle.append(title)
+            listOfIntro.append(intro)
+            listOfUrl.append(url)
+            movies_df = pd.DataFrame({'Title': listOfTitle, 'Intro': intro, 'Url': url})
+    print(movies_df)
