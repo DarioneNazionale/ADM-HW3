@@ -10,34 +10,34 @@ indexDictionary = defaultdict(list)
 
 fileNumber = 0  # starting from file 0
 while os.path.exists("MoviesTSV\\article_" + str(fileNumber) + ".tsv"):  # Iterating for each file
-    with open('MoviesTSV\\article_' + str(fileNumber) + '.tsv', encoding='utf8') as tsvfile:
 
+    #extratting the data from the tsv document
+    with open('MoviesTSV\\article_' + str(fileNumber) + '.tsv', encoding='utf8') as tsvfile:
         reader = csv.reader(tsvfile, delimiter='\t')
         row = next(reader)
 
         intro = row[1]
         plot = row[2]
 
-        preprocessed_data = list(set(utils.preprocess(intro + " " + plot)))
+        preprocessed_data = list(set(utils.preprocess(intro + " " + plot))) #processing intro and plot
 
 
-        if len(vocabulary.keys()) == 0:
-            vocabulary = dict([(x + 1, y) for x, y in enumerate(preprocessed_data)])
-        else:
-            for word in preprocessed_data:
-                if not word in vocabulary.values():
-                    vocabulary[max(vocabulary.keys())] = word
 
-        for index in vocabulary:
-            if vocabulary[index] in preprocessed_data:
-                indexDictionary[index].append(fileNumber)
-                
-        fileNumber += 1
-        
-        #This make the scrypt reate the index only for the first 10 files at most.
+    if len(vocabulary.keys()) == 0: #if the vocabulary is empty, just putting all the words inside
+        vocabulary = dict([(x + 1, y) for x, y in enumerate(preprocessed_data)])
+        print(vocabulary)
+    else:
+        for word in preprocessed_data: #insertig the words in the wocabulary
+            if word not in vocabulary.values(): #only if them are missing
+                vocabulary[max(vocabulary.keys()) + 1] = word
 
-        if fileNumber == 10:
-            break
+    #inserting the article number in the indexDictionary
+    for index in vocabulary:
+        if vocabulary[index] in preprocessed_data:
+            indexDictionary[index].append(fileNumber)
+
+    #let's moove to the next file.
+    fileNumber += 1
 
 #saving the indexDictionary in a file.
 with open('indexDictionary.pkl', 'wb') as indexFile:
@@ -46,7 +46,6 @@ with open('indexDictionary.pkl', 'wb') as indexFile:
 #saving the vocabulary in a file.
 with open('vocabulary.pkl', 'wb') as indexFile:
     pickle.dump(vocabulary, indexFile, pickle.HIGHEST_PROTOCOL)
-
 
 
 # ----------------------------------------> question 2.2.1 <----------------------------------------------
@@ -67,16 +66,11 @@ for wordID in indexDictionary: #for each term in the indexDictionary:
             #fetch intro and plot
             articleContent = utils.preprocess(intro + " " + plot)
 
-        # we try the code for just 10 elements for the moment
-        tfIdf = utils.computeTfIdf(wordID, articleContent, vocabulary, indexDictionary, 10)
+        #computing the tdfIdf
+        tfIdf = utils.computeTfIdf(wordID, articleContent, vocabulary, indexDictionary, 10) #since we test the code for just 10 elements for the moment
 
         # finally add the tfIdf to the dictionary
         tfIdIndexDictionary[wordID].append((fileNumber, tfIdf))
-
-
-#debbug prints:
-print(vocabulary)
-print(tfIdIndexDictionary)
 
 #saving the tfIdIndexDictionary in a file.
 with open('tfIdIndexDictionary.pkl', 'wb') as tfIdIndexFile:
