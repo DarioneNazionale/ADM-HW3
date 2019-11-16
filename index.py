@@ -14,7 +14,7 @@ from nltk.tokenize import word_tokenize
 from collections import defaultdict
 import os
 import csv
-
+from math import log
 
 
 def preprocess(s):
@@ -46,14 +46,14 @@ while os.path.exists("MoviesTSV\\article_" + str(fileNumber) + ".tsv"):  # Itera
         reader = csv.reader(tsvfile, delimiter='\t')
         row = next(reader)
 
-        plot = row[1]
-        intro = row[2]
+        intro = row[1]
+        plot = row[2]
 
-        preprocessed_data = preprocess(intro + plot)
+        preprocessed_data = list(set(preprocess(intro + " " + plot)))
 
 
         if len(vocabulary.keys()) == 0:
-            vocabulary = dict([(x + 1, y) for x, y in enumerate(sorted(set(preprocessed_data)))])
+            vocabulary = dict([(x + 1, y) for x, y in enumerate(preprocessed_data)])
         else:
             for word in preprocessed_data:
                 if not word in vocabulary.values():
@@ -81,46 +81,46 @@ with open('vocabulary.pkl', 'wb') as indexFile:
 
 # ----------------------------------------> question 2.2.1 <----------------------------------------------
 
-# ----------> fuctions for compite the TFIDF <---------------
-def computeTF(term, document):
-    normalizeDocument = document.lower().split()
-    return normalizeDocument.count(term.lower()) / float(len(normalizeDocument))
-    
-    
-
-def computeIDF(term, allDocuments):
-    numDocumentsWithThisTerm = 0
-    for doc in allDocuments:
-        if term.lower() in allDocuments[doc].lower().split():
-            numDocumentsWithThisTerm = numDocumentsWithThisTerm + 1
- 
-    if numDocumentsWithThisTerm > 0:
-        return 1.0 + log(float(len(allDocuments)) / numDocumentsWithThisTerm)
-    else:
-        return 1.0
-#------------------------------------------------------------
-
-
+#Just creating the dict for the tfidf index
 tfIdIndexDictionary = defaultdict(list)
 
-
 for wordID in indexDictionary: #for each term in the indexDictionary:
-    for fileNumber in indexDictionary[wordID]: #
-
+    for fileNumber in indexDictionary[wordID]: #and for each document in the list:
+        print("----------------> file number: ", fileNumber)
         #fetch information on the tsv document
         with open('MoviesTSV\\article_' + str(fileNumber) + '.tsv', encoding='utf8') as tsvfile:
             reader = csv.reader(tsvfile, delimiter='\t')
-            row = next(reader)
+            row = next(reader) #reading the file
+
+            intro = row[1]
+            plot = row[2]
 
             #fetch intro and plot
-            document = row[1] + row[2]
+            articleContent = preprocess(intro + " " + plot)
             
             
-        #compute the tfdIdf
-        tf = computeTF(vocabulary[wordID], document)
-        idf = computeIDF(vocabulary[wordID], document)
-        tfIdf = (tf * idf)
+        #-----------------> computing the tfdIdf <-----------------------
+        tf = articleContent.count(vocabulary[wordID]) / len(articleContent) #compute tf
+
+        if tf == 0:
+            print("the tf is == 0, and the count of the words in this article is: ", articleContent.count(vocabulary[wordID]))
+            print("we are looking for: ", vocabulary[wordID])
+            print("the content is: ", articleContent)
+
+        #nunning just for 10 files since we want to test it
+        idf = 1.0 + log(10 / len(indexDictionary[wordID]))
+
+        tfIdf = tf * idf #make the product to find the tfIdf
+        #---------------------------------------------------------
 
         # finally add the tfIdf to the dictionary
-        tfIdIndexDictionary[wordID].append(tuple(fileNumber, tfIdf))
+        tfIdIndexDictionary[wordID].append((fileNumber, tfIdf))
 
+
+#debbug prints:
+print(vocabulary)
+print(tfIdIndexDictionary)
+
+#saving the tfIdIndexDictionary in a file.
+with open('tfIdIndexDictionary.pkl', 'wb') as tfIdIndexFile:
+    pickle.dump(tfIdIndexDictionary, tfIdIndexFile, pickle.HIGHEST_PROTOCOL)
