@@ -56,11 +56,14 @@ while os.path.exists("MoviesTSV\\article_" + str(fileNumber) + ".tsv"):  # Itera
         for index in vocabulary:
             if vocabulary[index] in preprocessed_data:
                 indexDictionary[index].append(fileNumber)
-
-        #print("file number: ", fileNumber)
+                
         fileNumber += 1
+        
+        #This make the scrypt reate the index only for the first 10 files at most.
+        """
         if fileNumber == 10:
             break
+        """
 
 with open('indexDictionary.pkl', 'wb') as indexFile:
     pickle.dump(indexDictionary, indexFile, pickle.HIGHEST_PROTOCOL)
