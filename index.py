@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[ ]:
+
+
 import pickle
 import nltk
 nltk.download('punkt')
@@ -76,33 +82,22 @@ with open('vocabulary.pkl', 'wb') as indexFile:
 # ----------------------------------------> question 2.2.1 <----------------------------------------------
 
 # ----------> fuctions for compite the TFIDF <---------------
-def computeTF(wordDict, bagOfWords):
-    tfDict = {}
-    bagOfWordsCount = len(bagOfWords)
-    for word, count in wordDict.items():
-        tfDict[word] = count / float(bagOfWordsCount)
-    return tfDict
+def computeTF(term, document):
+    normalizeDocument = document.lower().split()
+    return normalizeDocument.count(term.lower()) / float(len(normalizeDocument))
+    
+    
 
-
-def computeIDF(documents):
-    import math
-    N = len(documents)
-
-    idfDict = dict.fromkeys(documents[0].keys(), 0)
-    for document in documents:
-        for word, val in document.items():
-            if val > 0:
-                idfDict[word] += 1
-
-    for word, val in idfDict.items():
-        idfDict[word] = math.log(N / float(val))
-    return idfDict
-
-def computeTFIDF(tfBagOfWords, idfs):
-    tfidf = {}
-    for word, val in tfBagOfWords.items():
-        tfidf[word] = val * idfs[word]
-    return tfidf
+def computeIDF(term, allDocuments):
+    numDocumentsWithThisTerm = 0
+    for doc in allDocuments:
+        if term.lower() in allDocuments[doc].lower().split():
+            numDocumentsWithThisTerm = numDocumentsWithThisTerm + 1
+ 
+    if numDocumentsWithThisTerm > 0:
+        return 1.0 + log(float(len(allDocuments)) / numDocumentsWithThisTerm)
+    else:
+        return 1.0
 #------------------------------------------------------------
 
 
@@ -118,15 +113,14 @@ for wordID in indexDictionary: #for each term in the indexDictionary:
             row = next(reader)
 
             #fetch intro and plot
-            intro = row[1]
-            plot = row[2]
-
-            #process the data
-            preprocessed_data = preprocess(intro + plot)
-
+            document = row[1] + row[2]
+            
+            
         #compute the tfdIdf
-        tfIdf = computeTF(vocabulary[wordID], preprocessed_data)
-        tfIdf = computeIDF(documents)
+        tf = computeTF(vocabulary[wordID], document)
+        idf = computeIDF(vocabulary[wordID], document)
+        tfIdf = (tf * idf)
 
         # finally add the tfIdf to the dictionary
         tfIdIndexDictionary[wordID].append(tuple(fileNumber, tfIdf))
+
