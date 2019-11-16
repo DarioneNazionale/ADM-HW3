@@ -1,4 +1,4 @@
-
+import pickle
 import nltk
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -8,6 +8,7 @@ from nltk.tokenize import word_tokenize
 from collections import defaultdict
 import os
 import csv
+
 
 
 def preprocess(s):
@@ -26,6 +27,9 @@ def preprocess(s):
     return words
 
 
+
+
+# ----------------------------------------> question 2.1.1 <----------------------------------------------
 vocabulary = dict()
 indexDictionary = defaultdict(list)
 
@@ -53,10 +57,17 @@ while os.path.exists("MoviesTSV\\article_" + str(fileNumber) + ".tsv"):  # Itera
             if vocabulary[index] in preprocessed_data:
                 indexDictionary[index].append(fileNumber)
 
+        #print("file number: ", fileNumber)
         fileNumber += 1
-        if fileNumber == 5:
+        if fileNumber == 10:
             break
 
+with open('indexDictionary.pkl', 'wb') as indexFile:
+    pickle.dump(indexDictionary, indexFile, pickle.HIGHEST_PROTOCOL)
 
-print(vocabulary)
-print(indexDictionary)
+with open('vocabulary.pkl', 'wb') as indexFile:
+    pickle.dump(vocabulary, indexFile, pickle.HIGHEST_PROTOCOL)
+
+
+
+# ----------------------------------------> question 2.2.1 <----------------------------------------------
