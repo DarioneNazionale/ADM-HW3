@@ -60,10 +60,10 @@ while os.path.exists("MoviesTSV\\article_" + str(fileNumber) + ".tsv"):  # Itera
         fileNumber += 1
         
         #This make the scrypt reate the index only for the first 10 files at most.
-        """
+
         if fileNumber == 10:
             break
-        """
+
 
 with open('indexDictionary.pkl', 'wb') as indexFile:
     pickle.dump(indexDictionary, indexFile, pickle.HIGHEST_PROTOCOL)
@@ -74,3 +74,59 @@ with open('vocabulary.pkl', 'wb') as indexFile:
 
 
 # ----------------------------------------> question 2.2.1 <----------------------------------------------
+
+# ----------> fuctions for compite the TFIDF <---------------
+def computeTF(wordDict, bagOfWords):
+    tfDict = {}
+    bagOfWordsCount = len(bagOfWords)
+    for word, count in wordDict.items():
+        tfDict[word] = count / float(bagOfWordsCount)
+    return tfDict
+
+
+def computeIDF(documents):
+    import math
+    N = len(documents)
+
+    idfDict = dict.fromkeys(documents[0].keys(), 0)
+    for document in documents:
+        for word, val in document.items():
+            if val > 0:
+                idfDict[word] += 1
+
+    for word, val in idfDict.items():
+        idfDict[word] = math.log(N / float(val))
+    return idfDict
+
+def computeTFIDF(tfBagOfWords, idfs):
+    tfidf = {}
+    for word, val in tfBagOfWords.items():
+        tfidf[word] = val * idfs[word]
+    return tfidf
+#------------------------------------------------------------
+
+
+tfIdIndexDictionary = defaultdict(list)
+
+
+for wordID in indexDictionary: #for each term in the indexDictionary:
+    for fileNumber in indexDictionary[wordID]: #
+
+        #fetch information on the tsv document
+        with open('MoviesTSV\\article_' + str(fileNumber) + '.tsv', encoding='utf8') as tsvfile:
+            reader = csv.reader(tsvfile, delimiter='\t')
+            row = next(reader)
+
+            #fetch intro and plot
+            intro = row[1]
+            plot = row[2]
+
+            #process the data
+            preprocessed_data = preprocess(intro + plot)
+
+        #compute the tfdIdf
+        tfIdf = computeTF(vocabulary[wordID], preprocessed_data)
+        tfIdf = computeIDF(documents)
+
+        # finally add the tfIdf to the dictionary
+        tfIdIndexDictionary[wordID].append(tuple(fileNumber, tfIdf))
