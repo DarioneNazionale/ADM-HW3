@@ -25,7 +25,6 @@ while os.path.exists("MoviesTSV\\article_" + str(fileNumber) + ".tsv"):  # Itera
 
     if len(vocabulary.keys()) == 0: #if the vocabulary is empty, just putting all the words inside
         vocabulary = dict([(x + 1, y) for x, y in enumerate(preprocessed_data)])
-        print(vocabulary)
     else:
         for word in preprocessed_data: #insertig the words in the wocabulary
             if word not in vocabulary.values(): #only if them are missing
