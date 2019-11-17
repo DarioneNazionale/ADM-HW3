@@ -7,8 +7,6 @@ On the first step named collector.py, we have created our own dataset using the 
 
 On the second part : parser.py, we have used a function to transform the raw files form from HTML Wikipedia files to TSV files. We have extract specific informations from the HTML files such as the title, the introduction, the plot and the urls of each ones.
 
-In this files you will find the details functions used in the files
-
 utils.py : on this python file is recorded some functions that we have used in the former files. Two functions are written :
       - the preprocess function : this function sorts all our data. It has 3 features : the first one is to remove every punctuation and lower all characteres. The second one remove all the english stopwords (according to a predefine list), and the last one stem all the words. 
       - the computeTfidf function : this function create the tfidf by multiplied the compued tf and computed idf created with the mathematical formulas. 
