@@ -6,15 +6,15 @@ from nltk.stem import PorterStemmer
 from math import log
 
 def preprocess(string):
-    # Remove punctuation and lower all characters
+    #Removing punctuation and lower all characters
     wordsList = nltk.word_tokenize(string)
     wordsList = [word.lower() for word in wordsList if word.isalnum()]
 
-    # Remove stop words
+    #Removing stop words
     stop_words = set(stopwords.words('english'))
     wordsList = [i for i in wordsList if i not in stop_words]
 
-    # Stemming
+    #Stemming
     stemmer = PorterStemmer()
     wordsList = [stemmer.stem(word) for word in wordsList]
 
