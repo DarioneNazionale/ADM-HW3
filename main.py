@@ -34,11 +34,11 @@ if searchEngine == 1:
     query = list(set(query))  # removing repeating elements in a list
 
 
-    # fetching the vocabulary from the file
+    #fetching the vocabulary from the file
     with open('vocabulary.pkl', 'rb') as vocabularyFile:
         vocabulary = pickle.load(vocabularyFile)
 
-    # fetching the indexDictionary from the file
+    #fetching the indexDictionary from the file
     with open('indexDictionary.pkl', 'rb') as indexFile:
         indexDictionary = pickle.load(indexFile)
 
@@ -59,7 +59,7 @@ if searchEngine == 1:
                 if key == keyList[j]:
                     resultlist.append(value)
 
-        # compare for common articles
+        #comparing for common articles
         result = set(resultlist[0])
         for s in resultlist[1:]:
             result.intersection_update(s)
@@ -94,11 +94,11 @@ elif searchEngine == 2:
     # ----------------------------------------> question 2.2.2 <----------------------------------------------
     query = utils.preprocess(input("query: ")) #taken search elements from user
 
-    # fetching the vocabulary from the file
+    #fetching the vocabulary from the file
     with open('vocabulary.pkl', 'rb') as vocabularyFile:
         vocabulary = pickle.load(vocabularyFile)
 
-    # fetching the indexDictionary from the file
+    #fetching the indexDictionary from the file
     with open('indexDictionary.pkl', 'rb') as indexFile:
         indexDictionary = pickle.load(indexFile)
 
@@ -106,27 +106,27 @@ elif searchEngine == 2:
     with open('tfIdIndexDictionary.pkl', 'rb') as tfIdIndexFile:
         tfIdIndexDictionary = pickle.load(tfIdIndexFile)
 
-    # create the three dictionaries that stores:
-    queryIds =  []# the unique Ids of the queris word
+    #creating the three dictionaries that stores:
+    queryIds =  []#the unique Ids of the queris word
     articleTfIdfDict = dict() # for each word of the query the movies where it appears (and their tfIdf)
-    articleList = [] # a list of lists where each list contains the movies that contain one of the words in the query
+    articleList = [] #a list of lists where each list contains the movies that contain one of the words in the query
     for word in query:
         wordId = -1 # -1 means that we didn't find the wordId
 
         for (key, value) in vocabulary.items(): #serching the word id
-            if value == word:  # check the search elements are in vocabulary dictionary , or not ?
-                wordId = key  # if they are exist in vocabulary dictionary , up them on keyList
+            if value == word:  #checking the search elements are in vocabulary dictionary , or not ?
+                wordId = key  #if they are exist in vocabulary dictionary , up them on keyList
                 break #we found it, we don't neet to look for it more
 
-        if wordId == -1:  # if the wordId is not found that means that is a word not contained in any document
+        if wordId == -1:  #if the wordId is not found that means that is a word not contained in any document
             break  # so we must stop
 
         if wordId not in queryIds:
-            queryIds.append(wordId)  # adding the wordId to queryIds if is not already there
+            queryIds.append(wordId)  #adding the wordId to queryIds if is not already there
         articleTfIdfDict[wordId] = tfIdIndexDictionary[wordId]  # adding all the tuple movie, tfIdf to the articleTfIdfDict
         articleList.append(set(indexDictionary[wordId]))  # adding all the movies of that word to the articleList as sets
 
-    if not wordId == -1: # we will do this operations only if all the words are contained in at last one article
+    if not wordId == -1: #we will do this operations only if all the words are contained in at last one article
         #finding common articles
         communArticles = list(set.intersection(*articleList))
 
@@ -135,8 +135,8 @@ elif searchEngine == 2:
             for tuple in articleTfIdfDict[wordId]:
                 if tuple[0] not in communArticles:
                     articleTfIdfDict[wordId].remove(tuple)
-    else:# we will do this operations only if all the words are contained in at last one article
-        communArticles = []  # we initialize common articles as empty since we will not have articles in common
+    else: #we will do this operations only if all the words are contained in at last one article
+        communArticles = []  #we initialize common articles as empty since we will not have articles in common
 
 
     if len(communArticles) > 0: #if a word in the query in not contained in any document we don't do anything else
@@ -210,11 +210,11 @@ elif searchEngine == 3:
 
     query = utils.preprocess(input("query: ")) #taken search elements from user
 
-    # fetching the vocabulary from the file
+    #fetching the vocabulary from the file
     with open('vocabulary3.pkl', 'rb') as vocabularyFile:
         vocabulary = pickle.load(vocabularyFile)
 
-    # fetching the indexDictionary from the file
+    #fetching the indexDictionary from the file
     with open('indexDictionary3.pkl', 'rb') as indexFile:
         indexDictionary = pickle.load(indexFile)
 
@@ -222,7 +222,7 @@ elif searchEngine == 3:
     with open('tfIdIndexDictionary3.pkl', 'rb') as tfIdIndexFile:
         tfIdIndexDictionary = pickle.load(tfIdIndexFile)
 
-    # create the three dictionaries that stores:
+    #creating the three dictionaries that stores:
     queryIds =  []# the unique Ids of the queris word
     articleTfIdfDict = dict() # for each word of the query the movies where it appears (and their tfIdf)
     articleList = [] # a list of lists where each list contains the movies that contain one of the words in the query
@@ -230,19 +230,19 @@ elif searchEngine == 3:
         wordId = -1 # -1 means that we didn't find the wordId
 
         for (key, value) in vocabulary.items(): #serching the word id
-            if value == word:  # check the search elements are in vocabulary dictionary , or not ?
-                wordId = key  # if they are exist in vocabulary dictionary , up them on keyList
+            if value == word:  #check the search elements are in vocabulary dictionary , or not ?
+                wordId = key  #if they are exist in vocabulary dictionary , up them on keyList
                 break #we found it, we don't neet to look for it more
 
-        if wordId == -1:  # if the wordId is not found that means that is a word not contained in any document
-            break  # so we must stop
+        if wordId == -1:  #if the wordId is not found that means that is a word not contained in any document
+            break  #so we must stop
 
         if wordId not in queryIds:
-            queryIds.append(wordId)  # adding the wordId to queryIds if is not already there
+            queryIds.append(wordId)  #adding the wordId to queryIds if is not already there
         articleTfIdfDict[wordId] = tfIdIndexDictionary[wordId]  # adding all the tuple movie, tfIdf to the articleTfIdfDict
         articleList.append(set(indexDictionary[wordId]))  # adding all the movies of that word to the articleList as sets
 
-    if not wordId == -1: # we will do this operations only if all the words are contained in at last one article
+    if not wordId == -1: #we will do this operations only if all the words are contained in at last one article
         #finding common articles
         communArticles = list(set.intersection(*articleList))
 
@@ -251,8 +251,8 @@ elif searchEngine == 3:
             for tuple in articleTfIdfDict[wordId]:
                 if tuple[0] not in communArticles:
                     articleTfIdfDict[wordId].remove(tuple)
-    else:# we will do this operations only if all the words are contained in at last one article
-        communArticles = []  # we initialize common articles as empty since we will not have articles in common
+    else: #we will do this operations only if all the words are contained in at last one article
+        communArticles = []  #we initialize common articles as empty since we will not have articles in common
 
 
     if len(communArticles) > 0: #if a word in the query in not contained in any document we don't do anything else
@@ -282,7 +282,7 @@ elif searchEngine == 3:
                 listOfUrl.append(url)
 
 
-            #fetch the tfIdf of the file for each different word of the query
+            #fetching the tfIdf of the file for each different word of the query
             articleTfIdf = []
             for wordId in queryIds: #for each word of the query
                 for number, tfIdf in articleTfIdfDict[wordId]: #we fetch all the films in common
@@ -292,7 +292,7 @@ elif searchEngine == 3:
             #we use the list of the tfIdfs of those files for the querys elements
             listOfEuclidean.append(distance.euclidean(queryTfIdf, articleTfIdf))
 
-        #we add all the data to the dataframe
+        #adding all the data to the dataframe
         movies_df = pd.DataFrame({'Title': listOfTitle, 'Intro': listOfIntro, 'Url': listOfUrl, 'similarity': listOfEuclidean})
 
 
@@ -309,7 +309,7 @@ elif searchEngine == 3:
             #singleRow = pd.DataFrame({'Title': listOfTitle[index], 'Intro': listOfIntro[index], 'Url': listOfUrl[index], 'similarity': listOfSimilarity[index]}, index= [len(movies_df.index)])
             movies_df = movies_df.append({'Title': listOfTitle[index], 'Intro': listOfIntro[index], 'Url': listOfUrl[index], 'euclidean_distance': listOfEuclidean[index]}, ignore_index=True)
 
-        # printing the first 10 movies
+        #printing the first 10 movies
         print(movies_df)
 
     else: #if instead one of the query words is missing or thereare no films that share the those words:
