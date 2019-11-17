@@ -1,3 +1,7 @@
+"""Using the dinamic programming we construct amatrix where all cell represent the length of the maximal subsequence 
+of the substring of the original string identified by the row and column index, using the previus cells and filling the matrix by diagonal
+we solve the problem in polinomial time."""
+
 def LongestSubsequence(sequence):
     
     lenOfString = len(sequence) #take the length of the sequence
