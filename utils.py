@@ -14,7 +14,7 @@ def preprocess(string):
     stop_words = set(stopwords.words('english'))
     wordsList = [i for i in wordsList if i not in stop_words]
 
-    #Stemming
+    #Reducing inflected words to their word stem : stemming
     stemmer = PorterStemmer()
     wordsList = [stemmer.stem(word) for word in wordsList]
 
@@ -22,8 +22,8 @@ def preprocess(string):
 
 def computeTfIdf(wordId, listOfStrings, vocabulary, indexDictionary, allFiles = 30000):
 
-    tf = listOfStrings.count(vocabulary[wordId]) / len(listOfStrings)  # compute tf
+    tf = listOfStrings.count(vocabulary[wordId]) / len(listOfStrings)  #computing tf
 
-    idf = 1.0 + log( allFiles / len(indexDictionary[wordId])) # compute idf
+    idf = 1.0 + log( allFiles / len(indexDictionary[wordId])) #computing idf
 
-    return tf * idf  # make the product to find the tfIdf
+    return tf * idf  #making the product to find the tfIdf
