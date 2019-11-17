@@ -5,13 +5,14 @@ import csv
 import utils
 
 # ----------------------------------------> question 2.1.1 <----------------------------------------------
+
 vocabulary = dict()
 indexDictionary = defaultdict(list)
 
 fileNumber = 0  # starting from file 0
 while os.path.exists("MoviesTSV\\article_" + str(fileNumber) + ".tsv"):  # Iterating for each file
 
-    #extratting the data from the tsv document
+    #extratting the data from the tsv documents
     with open('MoviesTSV\\article_' + str(fileNumber) + '.tsv', encoding='utf8') as tsvfile:
         reader = csv.reader(tsvfile, delimiter='\t')
         row = next(reader)
@@ -30,12 +31,12 @@ while os.path.exists("MoviesTSV\\article_" + str(fileNumber) + ".tsv"):  # Itera
             if word not in vocabulary.values(): #only if them are missing
                 vocabulary[max(vocabulary.keys()) + 1] = word
 
-    #inserting the article number in the indexDictionary
+    #inserting the article numbers in the indexDictionary
     for index in vocabulary:
         if vocabulary[index] in preprocessed_data:
             indexDictionary[index].append(fileNumber)
 
-    #let's moove to the next file.
+    #let's move to the next file.
     fileNumber += 1
 
 #saving the indexDictionary in a file.
@@ -48,7 +49,6 @@ with open('vocabulary.pkl', 'wb') as indexFile:
 
 
 # ----------------------------------------> question 2.2.1 <----------------------------------------------
-
 #Just creating the dict for the tfidf index
 tfIdIndexDictionary = defaultdict(list)
 
@@ -62,7 +62,7 @@ for wordID in indexDictionary: #for each term in the indexDictionary:
             intro = row[1]
             plot = row[2]
 
-            #fetch intro and plot
+            #fetching intro and plot
             articleContent = utils.preprocess(intro + " " + plot)
 
         #computing the tdfIdf
@@ -81,10 +81,10 @@ with open('tfIdIndexDictionary.pkl', 'wb') as tfIdIndexFile:
 vocabulary3 = dict()
 indexDictionary3 = defaultdict(list)
 
-fileNumber = 0  # starting from file 0
+fileNumber = 0  #starting from file 0
 while os.path.exists("MoviesTSV\\article_" + str(fileNumber) + ".tsv"):  # Iterating for each file
 
-    # extratting the data from the tsv document
+    #extratting the data from the tsv document
     with open('MoviesTSV\\article_' + str(fileNumber) + '.tsv', encoding='utf8') as tsvfile:
         reader = csv.reader(tsvfile, delimiter='\t')
         row = next(reader)
