@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[47]:
-
-
 def LongestSubsequence(sequence):
     
     lenOfString = len(sequence) #take the length of the sequence
@@ -37,9 +31,6 @@ def LongestSubsequence(sequence):
     
     #return length of the longset subsequence
     return table[0][lenOfString-1]
-
-
-# In[48]:
 
 
 LongestSubsequence('DATAMININGSAPIENZA')
