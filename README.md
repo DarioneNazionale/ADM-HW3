@@ -13,5 +13,6 @@ On the third step, index.py, python file that once executed generate the indexes
 
 
 
-The exercise_4.py is a pyton code that finds the length of the longest palindromic substring of a string. We have used a dynamic 
+
+The exercise_4.py is a pyton code that finds the length of the longest palindromic substring of a string. We have used a dynamic way to resolve it putting succesively the answers of the substrings starting from a substring length equal to 1. 
 
