@@ -1,49 +1,46 @@
-"""
-for solve this problem we use dynamic programming, we build a matrix of zeros
-where rows and columns are equal to the number of letters in the input string,
-then each element L[i][j] of the matrix represent the length of the maximum palindrome
-substring contained in the section of the original string s that goes from the ith
-character to the jth one.
+#!/usr/bin/env python
+# coding: utf-8
 
-so first we fill the diagonal (since all letters by it sel is a palindrome word of length 1)
-then we continue with the upper diagonal until we reach the upper right element that contains
-the length on maximum palindrome string contained in all the string.
-since the right upper triangle is a mirrored copy of the left lower triangle we don't need to
-compute all the matrix, but just the upper triangle.
+# In[47]:
 
-furthermore we can observe that each element of the upper triangle (except for the diagonals)
-can be built exploiting the elements at the left and and below, since this two elements represents
-the two the length of the biggest palindrome substring, so if the two characters represented by
-the row and the column aren't equal the biggest palindrome the biggest palindrome string will be the
-the te greater individuated by the two sub strings (the left and the lower elements)
-if instead this two characters are equal that means that the biggest sub string will be incremented by 2,
-since this two characters can be added as end and start of the new palindrome sub string.
-"""
 
-def algorithm(string):
-    n = len(string)
+def LongestSubsequence(sequence):
+    
+    lenOfString = len(sequence) #take the length of the sequence
+    table=[] #create empty list for going to create a table
+    
+    #create table with 0 (lenOfString x lenOfString)
+    for x in range(lenOfString):
+        table.append([])
+        for y in range(lenOfString):
+            table[x].append(0)
 
-    # Create a table to store results of subproblems
-    L = [[0 for x in range(n)] for x in range(n)]
-
-    # Strings of length 1 are palindrome of length 1
-    for i in range(n):
-        L[i][i] = 1
-
-    # sub_l is the length of the substring
-    for sub_l in range(2, n+1):
-        for i in range(n-sub_l+1):
-            j = i+sub_l-1
-            if string[i] == string[j] and sub_l == 2:
-                L[i][j] = 2
-            elif string[i] == string[j]:
-                L[i][j] = L[i+1][j-1] + 2
+    #all single letter of lenght 1 recorded on the diagonal of the table
+    for i in range(lenOfString):
+        table[i][i] = 1
+    
+    #take the palindromes if length of these palindromes goes from 2 to 'lenOfString' and pick the longest one
+    for diagonal in range(2, lenOfString+1):
+        for i in range(lenOfString-diagonal+1):
+            j = i + diagonal-1
+            if sequence[i] == sequence[j]:
+                if diagonal == 2:
+                    table[i][j] = 2
+                else:
+                    table[i][j] = table[i][j-1]+2 #if the last and first character of this string are same , add 2 to the length
             else:
-                L[i][j] = max(L[i][j-1], L[i+1][j]);
+                table[i][j] = max(table[i][j-1], table[i+1][j]); #check and take one at a time and than take maximum
+    
+    #print the table
+    for row in table:
+          print(row)
+    
+    #return length of the longset subsequence
+    return table[0][lenOfString-1]
 
-    #returning the upper right element.
-    return L[0][n-1]
+
+# In[48]:
 
 
+LongestSubsequence('DATAMININGSAPIENZA')
 
-print(algorithm("DATAMININGSAPIENZA"))
