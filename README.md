@@ -9,14 +9,11 @@ On the second part : parser.py, we have used a function to transform the raw fil
 
 In this files you will find the details functions used in the files
 
-utils.py : on this python file is recorded the preprocessed function that sort all our data. It has 3 features : the first one is to remove every punctuation and lower all characteres. The second one remove all the english stopwords (according to a predefine list), and the last one stem all the words. 
-
+utils.py : on this python file is recorded some functions that we have used in the former files. Two functions are written :
+      - the preprocess function : this function sorts all our data. It has 3 features : the first one is to remove every punctuation and lower all characteres. The second one remove all the english stopwords (according to a predefine list), and the last one stem all the words. 
+      - the computeTfidf function : this function create the tfidf by multiplied the compued tf and computed idf created with the mathematical formulas. 
 
 On the third step, index.py, python file that once executed generate the indexes of the Search engines. 
-
-
-
-
 
 
 The exercise_4.py is a pyton code that finds the length of the longest palindromic substring of a string. We have used a dynamic way to resolve it putting succesively the answers of the substrings starting from a substring length equal to 1. 
